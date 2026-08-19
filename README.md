@@ -1,1 +1,76 @@
-# SQL-practical-3
+# 🎓 Simple College Management Database (MySQL)
+
+A beginner-friendly relational database project to manage departments, students, courses, and student course enrollments.
+
+---
+
+## 📌 Tables Overview
+
+* **`department`** — Stores department details (`dept_id`, `dept_name`).
+* **`student`** — Stores student details and links to their department (`roll_no`, `name`, `email`, `aadhar_no`, `dept_id`).
+* **`course`** — Stores available subjects offered by departments (`course_id`, `course_name`, `dept_id`).
+* **`enrollment`** — Tracks student course registration, semester, and grade (`roll_no`, `course_id`, `semester`, `grade`).
+
+---
+
+## 🚀 Database Script
+
+```sql
+CREATE DATABASE college_demo;
+USE college_demo;
+
+-- 1. Department Table
+CREATE TABLE department (
+    dept_id INT PRIMARY KEY,
+    dept_name VARCHAR(50) UNIQUE NOT NULL
+);
+
+-- 2. Student Table
+CREATE TABLE student (
+    roll_no INT PRIMARY KEY,
+    name VARCHAR(50) NOT NULL,
+    email VARCHAR(50) UNIQUE,
+    aadhar_no VARCHAR(12) UNIQUE,
+    dept_id INT,
+    FOREIGN KEY (dept_id) REFERENCES department(dept_id)
+);
+
+-- 3. Course Table
+CREATE TABLE course (
+    course_id INT PRIMARY KEY,
+    course_name VARCHAR(50) NOT NULL,
+    dept_id INT,
+    FOREIGN KEY (dept_id) REFERENCES department(dept_id)
+);
+
+-- 4. Enrollment Table (Composite Primary Key)
+CREATE TABLE enrollment (
+    roll_no INT,
+    course_id INT,
+    semester INT CHECK (semester BETWEEN 1 AND 8),
+    grade CHAR(2),
+    PRIMARY KEY (roll_no, course_id, semester),
+    FOREIGN KEY (roll_no) REFERENCES student(roll_no),
+    FOREIGN KEY (course_id) REFERENCES course(course_id)
+);
+
+-- Sample Data Insertion
+INSERT INTO department (dept_id, dept_name) 
+VALUES 
+    (1, 'Electronics'),
+    (2, 'Computer Science');
+
+INSERT INTO student (roll_no, name, email, aadhar_no, dept_id) 
+VALUES 
+    (101, 'Alex', 'alex@example.com', '123456789012', 1),
+    (102, 'Sam', 'sam@example.com', '987654321098', 2);
+
+INSERT INTO course (course_id, course_name, dept_id) 
+VALUES 
+    (201, 'Digital Electronics', 1),
+    (202, 'Data Structures', 2);
+
+INSERT INTO enrollment (roll_no, course_id, semester, grade) 
+VALUES 
+    (101, 201, 1, 'A'),
+    (102, 202, 2, 'B+');
