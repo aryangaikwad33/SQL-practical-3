@@ -54,3 +54,6 @@ INSERT INTO enrollment (roll_no, course_id, semester, grade)
 VALUES 
   (101, 201, 1, 'A'),
   (102, 202, 2, 'B+');
+
+create index idx_student_dept on student(dept_id);
+select*from student where dept_id = 1;
